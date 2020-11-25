@@ -14,8 +14,9 @@ module.exports.login = function(req, res) {
     //连接数据库
  connection.connect();
 
-const username = req.query.username;
-const password = req.query.password
+const username = req.body.username;
+const password = req.body.password
+console.log(username,password);
 connection.query(`SELECT * FROM users WHERE  username='${username}' AND password='${password}'`, function (error, results, fields) {
     if (error) throw error;
     if(results.length == 1){
@@ -33,7 +34,11 @@ connection.query(`SELECT * FROM users WHERE  username='${username}' AND password
       })
       return res.status(200).json({
         success:200,
-        message:'登录成功',
+        message: {
+			id: results[0].id,
+			username: results[0].username,
+			employeeName: results[0].employeeName
+		},
         tokenKey
       });
     }
@@ -59,6 +64,7 @@ module.exports.home = function(req, res) {
     //连接数据库
  connection.connect();
  connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function (error, results, fields) {
+	 console.log(results);
   if (error) throw error;
   if(results.length !== 0){
     if(results[0].type === 0){
@@ -67,19 +73,40 @@ module.exports.home = function(req, res) {
         message: [
           {
               name: '订单管理',
-              lis:['所有订单']
+              lis:[{
+				  name:'所有订单',
+				  nav:'/order'
+			  }]
           },
           {
               name: '产品管理',
-              lis:['我的产品','收发货']
+              lis:[{
+				  name: '所有产品',
+				  nav: '/product'
+			  },{
+				name: '收发货',
+				nav: '/shipments'
+			  }]
           },
           {
               name: '财务管理',
-              lis:['出库汇总表','出库明细表']
+              lis:[{
+				  name: '出库汇总表',
+				  nav: '/collect'
+			  },{
+				 name:  '出库明细表',
+				 nav: '/detail'
+			  }]
           },
           {
               name: '用户管理',
-              lis:['所用用户','个人信息']
+              lis:[{
+				  name:'所用用户',
+				  nav:'/all'
+			  },{
+				  name:'个人信息',
+				  nav:'/datum'
+			  }]
           }
       ]
       });
@@ -89,19 +116,37 @@ module.exports.home = function(req, res) {
         message:  [
           {
               name: '订单管理',
-              lis:['所有订单']
+              lis:[{
+				  name:'所有订单',
+				  nav:'/order'
+			  }]
           },
           {
               name: '产品管理',
-              lis:['我的产品','收发货']
+              lis:[{
+				  name: '所有产品',
+				  nav: '/product'
+			  },{
+				name: '收发货',
+				nav: '/shipments'
+			  }]
           },
           {
               name: '财务管理',
-              lis:['出库汇总表','出库明细表']
+              lis:[{
+				  name: '出库汇总表',
+				  nav: '/collect'
+			  },{
+				 name:  '出库明细表',
+				 nav: '/detail'
+			  }]
           },
           {
               name: '信息管理',
-              lis:['个人信息']
+              lis:[{
+				  name:'个人信息',
+				  nav:'/datum'
+			  }]
           }
       ]
       });

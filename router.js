@@ -9,12 +9,19 @@ var express = require('express');
 //1.创建一个路由容器
 var router = express.Router();
 
-router.post('/login', function(req, res) {
+// 登录验证
+router.post('/open/login', function(req, res) {
     Login.login(req, res);
 })
 
-router.get('/home', function(req, res) {
+// 获取home也布局
+router.get('/open/home', function(req, res) {
     Login.home(req, res);
+})
+
+// 获取查询订单数据
+router.get('/open/order', function(req, res) {
+    OrderForm.inquire(req, res);
 })
 
 //3.把router导出
