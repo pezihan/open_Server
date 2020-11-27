@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var fs = require('fs');
 var token = require('./token')
 
+// 获取与查询订单数据
 module.exports.inquire = function(req, res) {
 	const tokenKey = req.headers.authorization;
 	const start = (req.query.start - 1) * req.query.limit;
@@ -69,5 +70,46 @@ module.exports.inquire = function(req, res) {
  })
  //4.关闭连接
  connection.end();
+ }
+ 
+ // 根据id数组删除订单数据
+ module.exports.deletes = function(req, res) {
+	const tokenKey = req.headers.authorization;
+	const orderId = req.body.deleteId
+	console.log(orderId);
+	var connection = mysql.createConnection({
+	   host:'localhost',
+	   user: 'root',
+	   password : '123456',
+	   database : 'open_data'
+	 });
+	   //连接数据库
+	connection.connect();
+	connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function(error, results, fields) {
+		if (error) throw error;
+		if(results.length == 0) {
+				 return res.status(200).json({
+				   success:0,
+				   message:'非法操作'
+				 });
+		}else {
+			var connection = mysql.createConnection({
+			   host:'localhost',
+			   user: 'root',
+			   password : '123456',
+			   database : 'open_data'
+			 });
+			 connection.connect();
+			 connection.query(`DELETE FROM orderform WHERE id IN (${orderId})`, function(error, results, fields) {
+				// if (error) throw res.status(200).json({success:0,message: '删除失败'});
+				if (error) throw error;
+				return res.status(200).json({
+					success:200,
+					message: '删除成功'
+				});
+			 })
+		}
+	});
+	connection.end();
  }
  

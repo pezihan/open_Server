@@ -24,5 +24,10 @@ router.get('/open/order', function(req, res) {
     OrderForm.inquire(req, res);
 })
 
+// 根据id删除订单数据
+router.post('/open/delete', function(req, res) {
+    OrderForm.deletes(req, res);
+})
+
 //3.把router导出
 module.exports = router;
