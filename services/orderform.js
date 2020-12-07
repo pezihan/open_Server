@@ -101,8 +101,8 @@ module.exports.inquire = function(req, res) {
 			 });
 			 connection.connect();
 			 connection.query(`DELETE FROM orderform WHERE id IN (${orderId})`, function(error, results, fields) {
-				// if (error) throw res.status(200).json({success:0,message: '删除失败'});
-				if (error) throw error;
+				if (error) throw res.status(200).json({success:0,message: '删除失败'});
+				// if (error) throw error;
 				return res.status(200).json({
 					success:200,
 					message: '删除成功'
@@ -217,8 +217,8 @@ module.exports.editOrder = function(req, res) {
 			   //连接数据库
 			connection.connect();
 			connection.query(`SELECT * FROM orderform WHERE id=${id}`, function(error, results, fields) {
-				// if (error) throw res.status(200).json({success:0,message: '获取此订单失败'});
-				if (error) throw error
+				if (error) throw res.status(200).json({success:0,message: '获取此订单失败'});
+				// if (error) throw error
 				return res.status(200).json({
 				  success:200,
 				  message:results
@@ -228,3 +228,138 @@ module.exports.editOrder = function(req, res) {
 	})
 	connection.end();
  }
+ 
+ //15自定义时间格式
+ function showTime(){
+ 	var dateTimes = new Date();
+ 	var dateTime = dateTimes.getFullYear()+ '-' + (dateTimes.getMonth()+ 1) + '-' + dateTimes.getDate() + ' ' + dateTimes.getHours() + ':' + dateTimes.getMinutes() + ':' + dateTimes.getSeconds();
+ 	return dateTime
+ }
+ 
+ // 添加订单事务内容
+ module.exports.orderStaus = function(req, res) {
+	const tokenKey = req.headers.authorization;
+	const id = req.body.id
+	const staus = req.body.staus
+	var stausText = req.body.stausText
+	var stausItem = ''
+	var connection = mysql.createConnection({
+	   host:'localhost',
+	   user: 'root',
+	   password : '123456',
+	   database : 'open_data'
+	 });
+	connection.connect();
+	connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function(error, results, fields) {
+		if (error) throw error;
+		if(results.length == 0) {
+				 return res.status(200).json({
+				   success:0,
+				   message:'非法操作'
+				 });
+		} else {
+			var connection = mysql.createConnection({
+			   host:'localhost',
+			   user: 'root',
+			   password : '123456',
+			   database : 'open_data'
+			 });
+			   //连接数据库
+			connection.connect();
+			connection.query(`SELECT ${staus} FROM orderform WHERE id=${id}`, function(error, results, fields) {
+				if (error) throw res.status(200).json({success:0,message: '获取此订单售后信息失败'});
+				// if (error) throw error
+				if (staus === 'maintain') { // 维修记录
+					stausItem = '维修中';
+					if (results[0].maintain !== '无记录') {
+						stausText = results[0].maintain + '，' + stausText + ' ' + showTime()
+					} else {
+						stausText = stausText + ' ' + showTime()
+					}
+				} else if (staus === 'exchange') { // 换货记录
+					stausItem = '换货中';
+					if (results[0].exchange !== '无记录') {
+						stausText = results[0].exchange + '，' + stausText + ' ' + showTime()
+					} else {
+						stausText = stausText + ' ' + showTime()
+					}
+				} else { // 退货记录
+					stausItem = '退货中';
+					if (results[0].returns !== '无记录') {
+						stausText = results[0].returns + '，' + stausText + ' ' + showTime()
+					} else {
+						stausText = stausText + ' ' + showTime()
+					}
+				}
+				var connection = mysql.createConnection({
+				   host:'localhost',
+				   user: 'root',
+				   password : '123456',
+				   database : 'open_data'
+				 });
+				   //连接数据库
+				connection.connect();
+				connection.query(`UPDATE orderform SET ${staus}='${stausText}',staus='${stausItem}' WHERE id=${id}`, function(error, results, fields) {
+					return res.status(200).json({
+					  success:200,
+					  message:'事务新建成功'
+					});
+				})
+			})
+		}
+	})
+ }
+ 
+ // 退款事务
+  module.exports.orderReimburse = function(req, res) {
+	const tokenKey = req.headers.authorization;
+	const id = req.body.id
+	var stausText = '已退款'
+	var connection = mysql.createConnection({
+	   host:'localhost',
+	   user: 'root',
+	   password : '123456',
+	   database : 'open_data'
+	 });
+	connection.connect();
+	connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function(error, results, fields) {
+		if (error) throw error;
+		if(results.length == 0) {
+				 return res.status(200).json({
+				   success:0,
+				   message:'非法操作'
+				 });
+		} else {
+			var connection = mysql.createConnection({
+			   host:'localhost',
+			   user: 'root',
+			   password : '123456',
+			   database : 'open_data'
+			 });
+			   //连接数据库
+			connection.connect();
+			connection.query(`SELECT returns FROM orderform WHERE id=${id}`, function(error, results, fields) {
+				if (error) throw res.status(200).json({success:0,message: '获取此订单售后信息失败'});
+				if (results[0].returns !== '无记录') {
+					stausText = results[0].returns + '，' + stausText + ' ' + showTime()
+				} else {
+					stausText = stausText + ' ' + showTime()
+				}
+				var connection = mysql.createConnection({
+				   host:'localhost',
+				   user: 'root',
+				   password : '123456',
+				   database : 'open_data'
+				 });
+				   //连接数据库
+				connection.connect();
+				connection.query(`UPDATE orderform SET returns='${stausText}',staus='已完成' WHERE id=${id}`, function(error, results, fields) {
+					return res.status(200).json({
+					  success:200,
+					  message:'事务新建成功'
+					});
+				})
+			})
+		}
+	})
+  }

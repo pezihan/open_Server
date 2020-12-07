@@ -11,7 +11,7 @@
  Target Server Version : 50150
  File Encoding         : 65001
 
- Date: 27/11/2020 21:14:59
+ Date: 07/12/2020 22:50:43
 */
 
 SET NAMES utf8;
@@ -76,9 +76,9 @@ CREATE TABLE `orderform`  (
   `time` int(20) NULL DEFAULT NULL COMMENT '创建时间',
   `staus` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态',
   `operator` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单操作人',
-  `maintain` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '维修记录',
-  `exchange` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '换货记录',
-  `returns` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '退货记录',
+  `maintain` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '维修记录',
+  `exchange` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '换货记录',
+  `returns` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '退货记录',
   `cangku` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '仓库操作人',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `id`(`id`) USING BTREE,
@@ -118,7 +118,7 @@ INSERT INTO `orderform` VALUES (26, '郎　牡', 566411108, 20, '变频热水器
 INSERT INTO `orderform` VALUES (27, '吴　宇', 688229542, 20, '变频热水器 F50 白色', 1, 1580, '湖南省长沙市岳麓区路 76号 华诚地产小区 86号楼 99单元 26室', 2147483647, '63475506492', 1606461192, '已完成', '李四', '无记录', '无记录', '无记录', '张浩');
 INSERT INTO `orderform` VALUES (28, '陈信谦', 544569191, 20, '变频热水器 F50 白色', 1, 1580, '湖南省长沙市浏阳市路 02号 蔚蓝海岸小区 07号楼 99单元 43室', 2147483647, '37640358981', 1606461192, '维修中', '李四', '寄回单号：54565675765', '无记录', '无记录', '张浩');
 INSERT INTO `orderform` VALUES (29, '夏　然', 243312852, 18, '小米AI电视机 55寸 黑色', 1, 4500, '湖南省怀化市趾恃路 17号 慰小区 51号楼 2单元 568室', 2147483647, '38053269620', 1606461192, '已完成', '李四', '无记录', '无记录', '无记录', '张浩');
-INSERT INTO `orderform` VALUES (30, '赵映皆', 784264269, 18, '小米AI电视机 55寸 黑色', 2, 9000, '湖南省岳阳市就朔路 09号 丶小区 12号楼 2单元 302室', 2147483647, '55109194896', 1606461192, '已完成', '李四', '无记录', '无记录', '无记录', '张浩');
+INSERT INTO `orderform` VALUES (30, '赵映皆', 784264269, 18, '小米AI电视机 55寸 黑色', 2, 9000, '湖南省岳阳市就朔路 09号 丶小区 12号楼 2单元 302室', 2147483647, '55109194896', 1606461192, '换货中', '李四', '无记录', '无理由换货 寄回运单号：789237783434346 2020-12-7 22:50:7', '无记录', '张浩');
 
 -- ----------------------------
 -- Table structure for users

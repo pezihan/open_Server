@@ -39,9 +39,39 @@ router.post('/open/delete', function(req, res) {
 	 OrderForm.orderId(req, res)
  })
  
- // 获取商品列表
+ // 添加订单事务内容
+ router.post('/open/orderStaus', function(req, res) {
+	OrderForm.orderStaus(req, res)
+ })
+ 
+ // 添加退款事务
+ router.post('/open/orderReimburse', function(req, res) {
+ 	OrderForm.orderReimburse(req, res)
+ })
+ 
+ // 查询商品列表
  router.get('/open/commodity', function(req, res) {
-	Commodity.commoditys(req, res)
+	Commodity.commodity(req, res)
+ })
+ 
+ // 获取商品列表
+ router.get('/open/commoditys', function(req, res) {
+ 	Commodity.commoditys(req, res)
+ })
+ 
+ // 根据id删除商品数据
+ router.post('/open/deleteCommod', function(req, res) {
+ 	Commodity.deleteCommod(req, res)
+ })
+ 
+ // 根据id查询商品数据
+ router.post('/open/editCommodId', function(req, res) {
+ 	Commodity.editCommodId(req, res)
+ })
+ 
+ // 添加与修改商品数据
+ router.post('/open/editCommodity', function(req, res) {
+ 	Commodity.editCommodity(req, res)
  })
 
 //3.把router导出
