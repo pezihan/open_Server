@@ -1,6 +1,8 @@
 var Login = require('./services/login');
 var OrderForm = require('./services/orderform');
 var Commodity = require('./services/commodity');
+var Users = require('./services/users');
+var Finance = require('./services/finance');
 
 //express提供了一种更好的方式 
 //专门用来包装路由的
@@ -49,6 +51,16 @@ router.post('/open/delete', function(req, res) {
  	OrderForm.orderReimburse(req, res)
  })
  
+ // 获取与查找收发货订单数据
+ router.get('/open/getmanagement', function(req, res) {
+ 	OrderForm.getmanagement(req, res)
+ })
+ 
+ // 修改物流信息与售后状态信息
+ router.post('/open/logistics', function(req, res) {
+ 	OrderForm.logistics(req, res)
+ })
+ 
  // 查询商品列表
  router.get('/open/commodity', function(req, res) {
 	Commodity.commodity(req, res)
@@ -73,6 +85,33 @@ router.post('/open/delete', function(req, res) {
  router.post('/open/editCommodity', function(req, res) {
  	Commodity.editCommodity(req, res)
  })
+ 
+ 
+ // 获取用户列表
+ router.get('/open/userList', function(req, res) {
+ 	Users.userList(req, res)
+ })
+ 
+ // 根据id查找用户信息
+ router.get('/open/userId', function(req, res) {
+ 	Users.userId(req, res)
+ })
+ 
+ // 修改用户密码
+ router.post('/open/passwordId', function(req, res) {
+ 	Users.passwordId(req, res)
+ })
+ 
+  // 根据id删除用户数据
+  router.post('/open/deluserId', function(req, res) {
+  	Users.deluserId(req, res)
+  })
+  
+  // 添加用户或修改用户信息
+  router.post('/open/useredit', function(req, res) {
+  	Users.useredit(req, res)
+  })
+
 
 //3.把router导出
 module.exports = router;

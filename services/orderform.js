@@ -363,3 +363,188 @@ module.exports.editOrder = function(req, res) {
 		}
 	})
   }
+  
+  // 获取与查找收发货订单数据
+  module.exports.getmanagement = function(req, res) {
+	const tokenKey = req.headers.authorization;
+	const start = (req.query.start - 1) * req.query.limit;
+	const limit = req.query.start * req.query.limit;
+	const navigation = req.query.navigation;
+	const employeeName = req.query.employeeName;
+	const employeeID = req.query.employeeID;
+	const phone = req.query.phone;
+	const number = req.query.number;
+	var chaxunSum = ''
+	var chaxun = '';
+	console.log(navigation)
+	if(navigation == 0) {
+		chaxunSum = `SELECT * FROM orderform WHERE phone Like '%${phone}%' AND employeeName Like '%${employeeName}%' AND employeeID Like '%${employeeID}%' AND number Like '%${number}%' AND staus LIKE '%进行中%'`
+		chaxun = `SELECT * FROM orderform WHERE phone Like '%${phone}%' AND employeeName Like '%${employeeName}%' AND employeeID Like '%${employeeID}%' AND number Like '%${number}%' AND staus LIKE '%进行中%' ORDER BY ID DESC LIMIT ${start},${limit}`
+	}else if(navigation == 1) {
+		chaxunSum = `SELECT * FROM orderform WHERE phone Like '%${phone}%' AND employeeName Like '%${employeeName}%' AND employeeID Like '%${employeeID}%' AND number Like '%${number}%' AND (staus LIKE '%退货中%' OR staus LIKE '%换货中%' OR staus LIKE '%维修中%')`
+		chaxun = `SELECT * FROM orderform WHERE phone Like '%${phone}%' AND employeeName Like '%${employeeName}%' AND employeeID Like '%${employeeID}%' AND number Like '%${number}%' AND (staus LIKE '%退货中%' OR staus LIKE '%换货中%' OR staus LIKE '%维修中%') ORDER BY ID DESC LIMIT ${start},${limit}`
+	}else if(navigation == 2) {
+		chaxunSum = `SELECT * FROM orderform WHERE phone Like '%${phone}%' AND employeeName Like '%${employeeName}%' AND employeeID Like '%${employeeID}%' AND number Like '%${number}%' AND staus LIKE '%已完成%'`
+		chaxun = `SELECT * FROM orderform WHERE phone Like '%${phone}%' AND employeeName Like '%${employeeName}%' AND employeeID Like '%${employeeID}%' AND number Like '%${number}%' AND staus LIKE '%已完成%' ORDER BY ID DESC LIMIT ${start},${limit}`
+	}
+	var connection = mysql.createConnection({
+	  host:'localhost',
+	  user: 'root',
+	  password : '123456',
+	  database : 'open_data'
+	});
+	//连接数据库
+	connection.connect();
+	connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function (error, results, fields) {
+		 if (error) throw error;
+		 if(results.length == 0) {
+			 return res.status(200).json({
+			   success:0,
+			   message:'非法操作'
+		});
+	} else {
+		var connection = mysql.createConnection({
+		   host:'localhost',
+		   user: 'root',
+		   password : '123456',
+		   database : 'open_data'
+		 });
+		var str = 0
+		//连接数据库  `SELECT * FROM orderform LIMIT(${start - 1})*${limit},${limit}`
+		connection.connect();
+		connection.query(chaxunSum, function(error, result, fields) {
+					 // if (error) throw res.status(200).json({success:0,message: '查询失败'});
+					 if (error) throw error
+					 console.log(result.length);
+							 str = result.length
+		});
+		connection.query(chaxun, function(error, results, fields) {
+					 // if (error) throw res.status(200).json({success:0,message: '查询失败'});
+					 if (error) throw error
+					 console.log(results);
+					return res.status(200).json({
+						success:200,
+						message: results,
+						sum:str
+					});
+				 });
+				 connection.end();
+			}
+		})
+		//4.关闭连接
+		connection.end();
+  }
+  
+   // 修改物流信息与售后状态信息
+  module.exports.logistics = function(req, res) {
+	 const tokenKey = req.headers.authorization;
+	 const id = req.body.id
+	 const cangku = req.body.cangku
+	 const number = req.body.number
+	 var orderNumber = "售后物流单号：" + req.body.orderNumber
+	 const orderStatus = req.body.orderStatus
+	 var orderText = req.body.orderText
+	 var connection = mysql.createConnection({
+	    host:'localhost',
+	    user: 'root',
+	    password : '123456',
+	    database : 'open_data'
+	  });
+	  connection.connect();
+	  connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function(error, results, fields) {
+		  if (error) throw error;
+		  if(results.length == 0) {
+		  		 return res.status(200).json({
+		  		   success:0,
+		  		   message:'非法操作'
+		  		 });
+		  } else {
+			if (number !== '') { // 新订单发货物流
+				var connection = mysql.createConnection({
+				   host:'localhost',
+				   user: 'root',
+				   password : '123456',
+				   database : 'open_data'
+				 });
+				 connection.connect();
+				 connection.query(`UPDATE orderform SET number=${number},staus='已完成',cangku='${cangku}' WHERE id=${id}`, function(error, results, fields) {
+					if (error) throw error;
+					return res.status(200).json({
+					  success:200,
+					  message:'事务新建成功'
+					});
+				 })
+			} else if(orderText !== '') { // 旧订单收到货备注
+				var connection = mysql.createConnection({
+				   host:'localhost',
+				   user: 'root',
+				   password : '123456',
+				   database : 'open_data'
+				 });
+				   //连接数据库
+				connection.connect();
+				connection.query(`SELECT ${orderStatus} FROM orderform WHERE id=${id}`, function(error, results, fields) {
+					if (error) throw res.status(200).json({success:0,message: '获取此订单售后信息失败'});
+					if (orderStatus === 'maintain') {
+						orderText = results[0].maintain + '，' + orderText + ' ' + showTime()
+	
+					} else if (orderStatus === 'exchange') {
+						orderText = results[0].exchange + '，' + orderText + ' ' + showTime()
+					} else {
+						orderText = results[0].returns + '，' + orderText + ' ' + showTime()
+					}
+					var connection = mysql.createConnection({
+					   host:'localhost',
+					   user: 'root',
+					   password : '123456',
+					   database : 'open_data'
+					 });
+					 connection.connect();
+					 connection.query(`UPDATE orderform SET ${orderStatus}='${orderText}',cangku='${cangku}' WHERE id=${id}`, function(error, results, fields) {
+						 if (error) throw error;
+						 return res.status(200).json({
+						   success:200,
+						   message:'事务备注成功'
+						 });
+					 })
+				})
+			}  else { // 旧订单售后发货
+				var connection = mysql.createConnection({
+				   host:'localhost',
+				   user: 'root',
+				   password : '123456',
+				   database : 'open_data'
+				 });
+				   //连接数据库
+				connection.connect();
+				connection.query(`SELECT ${orderStatus} FROM orderform WHERE id=${id}`, function(error, results, fields) {
+					if (error) throw res.status(200).json({success:0,message: '获取此订单售后信息失败'});
+					if (orderStatus === 'maintain') {
+						orderNumber = results[0].maintain + '，' + orderNumber + ' ' + showTime()
+					
+					} else if (orderStatus === 'exchange') {
+						orderNumber = results[0].exchange + '，' + orderNumber + ' ' + showTime()
+					} else {
+						orderNumber = results[0].returns + '，' + orderNumber + ' ' + showTime()
+					}
+					var connection = mysql.createConnection({
+					   host:'localhost',
+					   user: 'root',
+					   password : '123456',
+					   database : 'open_data'
+					 });
+					 connection.connect();
+					 connection.query(`UPDATE orderform SET ${orderStatus}='${orderNumber}',staus='已完成',cangku='${cangku}' WHERE id=${id}`, function(error, results, fields) {
+						 if (error) throw error;
+						 return res.status(200).json({
+						   success:200,
+						   message:'事务备注成功'
+						 });
+					 })
+				})
+			}
+		  }
+	  })
+	  //4.关闭连接
+	  connection.end();
+  }
