@@ -91,9 +91,6 @@ module.exports.home = function(req, res) {
           {
               name: '财务管理',
               lis:[{
-				  name: '出库汇总表',
-				  nav: '/collect'
-			  },{
 				 name:  '出库明细表',
 				 nav: '/detail'
 			  }]
@@ -134,9 +131,6 @@ module.exports.home = function(req, res) {
           {
               name: '财务管理',
               lis:[{
-				  name: '出库汇总表',
-				  nav: '/collect'
-			  },{
 				 name:  '出库明细表',
 				 nav: '/detail'
 			  }]

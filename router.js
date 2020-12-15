@@ -2,7 +2,6 @@ var Login = require('./services/login');
 var OrderForm = require('./services/orderform');
 var Commodity = require('./services/commodity');
 var Users = require('./services/users');
-var Finance = require('./services/finance');
 
 //express提供了一种更好的方式 
 //专门用来包装路由的
@@ -59,6 +58,11 @@ router.post('/open/delete', function(req, res) {
  // 修改物流信息与售后状态信息
  router.post('/open/logistics', function(req, res) {
  	OrderForm.logistics(req, res)
+ })
+ 
+ // 财务列表获取
+ router.get('/open/detailList', function(req, res) {
+ 	OrderForm.detailList(req, res)
  })
  
  // 查询商品列表

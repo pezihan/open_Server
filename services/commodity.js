@@ -238,3 +238,56 @@ module.exports.editCommodId = function(req, res) {
 	connection.end();
  })
  }
+ 
+ // 财务列表获取
+ module.exports.commoditys = function(req, res) {
+ 	const tokenKey = req.headers.authorization;
+ 	const start = (req.query.start - 1) * req.query.limit;
+ 	const limit = req.query.start * req.query.limit;
+ 	const product = req.query.product
+ 	const commodity = req.query.commodity
+ 	var connection = mysql.createConnection({
+ 	   host:'localhost',
+ 	   user: 'root',
+ 	   password : '123456',
+ 	   database : 'open_data'
+ 	 });
+ 	   //连接数据库
+ 	connection.connect();
+ 	connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function(error, results, fields) {
+ 		if (error) throw error;
+ 		if(results.length == 0) {
+ 				 return res.status(200).json({
+ 				   success:0,
+ 				   message:'非法操作'
+ 				 });
+ 		} else {
+ 			var connection = mysql.createConnection({
+ 			   host:'localhost',
+ 			   user: 'root',
+ 			   password : '123456',
+ 			   database : 'open_data'
+ 			 });
+ 			 var str = 0
+ 			   //连接数据库
+ 			connection.connect();
+ 			connection.query(`SELECT * FROM commodity WHERE product LIKE '%${product}%' AND commodity LIKE '%${commodity}%'`, function(error, results, fields) {
+ 				if (error) throw error;
+ 				// if (error) throw res.status(200).json({success:0,message: '查询失败'});
+ 				str = results.length
+ 			});
+ 			connection.query(`SELECT * FROM commodity WHERE product LIKE '%${product}%' AND commodity LIKE '%${commodity}%' ORDER BY ID DESC LIMIT ${start},${limit}`, function(error, results, fields) {
+ 				if (error) throw error;
+ 				// if (error) throw res.status(200).json({success:0,message: '查询失败'});
+ 				console.log(results);
+ 				return res.status(200).json({
+ 					success:200,
+ 					message: results,
+ 					sum:str
+ 				});
+ 			});
+ 			connection.end();
+ 		}
+ 	})
+ 	connection.end();
+ }

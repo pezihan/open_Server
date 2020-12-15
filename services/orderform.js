@@ -548,3 +548,63 @@ module.exports.editOrder = function(req, res) {
 	  //4.关闭连接
 	  connection.end();
   }
+  
+  // 财务列表获取
+  module.exports.detailList = function(req, res) {
+  	const tokenKey = req.headers.authorization;
+  	const start = (req.query.start - 1) * req.query.limit;
+  	const limit = req.query.start * req.query.limit;
+  	const commodity = req.query.commodity
+  	const employeeID = req.query.employeeID
+  	var connection = mysql.createConnection({
+  	   host:'localhost',
+  	   user: 'root',
+  	   password : '123456',
+  	   database : 'open_data'
+  	 });
+  	   //连接数据库
+  	connection.connect();
+  	connection.query(`SELECT * FROM users WHERE  tokenKey='${tokenKey}'`, function(error, results, fields) {
+  		if (error) throw error;
+  		if(results.length == 0) {
+  				 return res.status(200).json({
+  				   success:0,
+  				   message:'非法操作'
+  				 });
+  		} else {
+  			var connection = mysql.createConnection({
+  			   host:'localhost',
+  			   user: 'root',
+  			   password : '123456',
+  			   database : 'open_data'
+  			 });
+  			 var str = 0;
+			 var summation = 0;
+  			   //连接数据库
+  			connection.connect();
+			connection.query(`SELECT SUM(sum) FROM orderform`, function(error, results, fields) {
+				if (error) throw error;
+				// if (error) throw res.status(200).json({success:0,message: '查询失败'});
+				summation = results[0]
+			});
+  			connection.query(`SELECT * FROM orderform WHERE employeeID LIKE '%${employeeID}%' AND commodity LIKE '%${commodity}%'`, function(error, results, fields) {
+  				if (error) throw error;
+  				// if (error) throw res.status(200).json({success:0,message: '查询失败'});
+  				str = results.length
+  			});
+  			connection.query(`SELECT * FROM orderform WHERE employeeID LIKE '%${employeeID}%' AND commodity LIKE '%${commodity}%' ORDER BY ID DESC LIMIT ${start},${limit}`, function(error, results, fields) {
+  				if (error) throw error;
+  				// if (error) throw res.status(200).json({success:0,message: '查询失败'});
+  				console.log(results);
+  				return res.status(200).json({
+  					success:200,
+  					message: results,
+  					sum:str,
+					summation: summation
+  				});
+  			});
+  			connection.end();
+  		}
+  	})
+  	connection.end();
+  }

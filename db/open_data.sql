@@ -11,7 +11,7 @@
  Target Server Version : 50150
  File Encoding         : 65001
 
- Date: 07/12/2020 22:50:43
+ Date: 15/12/2020 22:32:08
 */
 
 SET NAMES utf8;
@@ -91,7 +91,7 @@ CREATE TABLE `orderform`  (
 -- ----------------------------
 INSERT INTO `orderform` VALUES (1, '刘连中', 840653515, 1, '微波炉 H2  白色', 2, 640, '湖南省长沙市长沙县路 16号 海天城小区 58号楼 99单元 48室', 2147483647, '未发货', 1606461192, '进行中', '张三', '无记录', '无记录', '无记录', '张浩');
 INSERT INTO `orderform` VALUES (2, '潘毕延　', 726799952, 2, '微波炉 H2  黑色', 1, 320, '湖南省长沙市长沙县路 50号 唯一星城小区 94号楼 99单元 27室', 2147483647, '未发货', 1606461192, '进行中', '张三', '无记录', '无记录', '无记录', '张浩');
-INSERT INTO `orderform` VALUES (3, '于频霆', 745649191, 5, '美的空调 白色', 1, 1800, '湖南省长沙市岳麓区路 76号 蔚蓝海岸小区 24号楼 99单元 39室', 2147483647, '76465439537', 1606461192, '进行中', '张三', '无记录', '无记录', '无记录', '张浩');
+INSERT INTO `orderform` VALUES (3, '于频霆', 745649191, 5, '美的空调 白色', 1, 1800, '湖南省长沙市岳麓区路 76号 蔚蓝海岸小区 24号楼 99单元 39室', 2147483647, '未发货', 1606461192, '进行中', '张三', '无记录', '无记录', '无记录', '张浩');
 INSERT INTO `orderform` VALUES (4, '杨广庚', 235856070, 9, '美的空调扇 白色', 2, 540, '湖南省长沙市岳麓区路 91号 蔚蓝海岸小区 51号楼 99单元 03室', 2147483647, '未发货', 1606461192, '进行中', '李四', '无记录', '无记录', '无记录', '张浩');
 INSERT INTO `orderform` VALUES (5, '凌　健', 566853845, 11, '美的电冰箱 H2 白色', 1, 2100, '湖南省怀化市贝铰路 13号 墓小区 20号楼 7单元 420室', 2147483647, '未发货', 1606461192, '进行中', '李四', '无记录', '无记录', '无记录', '张浩');
 INSERT INTO `orderform` VALUES (6, '丁越楚', 270769197, 12, '美的电冰箱 H2 灰色', 4, 8400, '湖南省长沙市长沙县路 88号 唯一星城小区 84号楼 99单元 38室', 2147483647, '87570041399', 1606461192, '退货中', '李四', '无记录', '无记录', '退回单号：757656676', '张浩');
@@ -145,8 +145,8 @@ CREATE TABLE `users`  (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, '张三', 0, '湖南省长沙市雨花区', 658886400, '总裁办公室', '经理', 66666, 'admin', 'admin', 0, '张三', 'eyJhbGciOiJIUzI1NiJ9.YWRtaW4.xYcfPLwibfS0NFlbMaC1gyYuhzM2vbRErSPXhcMNdvM');
-INSERT INTO `users` VALUES (2, '梓涵', 1, '长沙芙蓉区海天城', 890668800, '客服部', '客服', 1, 'kefu', '123456', 1, '张三', 'eyJhbGciOiJIUzI1NiJ9.a2VmdQ.uoJrMINWNtpCdG5mtZzoiLUZTOZUgIoGVppUFBAsKL8');
-INSERT INTO `users` VALUES (3, '程刚', 0, '长沙天心区唯一星城', 960163200, '采购部', '仓管', 2, 'cangku', '123456', 1, '张三', 'eyJhbGciOiJIUzI1NiJ9.Y2FuZ2t1.O6qlCpTSJlBfyFwI6SUrmE3FNTNf5YdubBsoDcSypn0');
+INSERT INTO `users` VALUES (1, '张三', 0, '湖南省长沙市雨花区', 658886400, '市场部', '经理', 66666, 'admin', 'admin', 0, '张三', 'eyJhbGciOiJIUzI1NiJ9.YWRtaW4.xYcfPLwibfS0NFlbMaC1gyYuhzM2vbRErSPXhcMNdvM');
+INSERT INTO `users` VALUES (2, '梓涵', 1, '长沙芙蓉区海天城', 898617600, '客服部', '客服', 1, 'kefu', '123456', 1, '张三', 'eyJhbGciOiJIUzI1NiJ9.a2VmdQ.uoJrMINWNtpCdG5mtZzoiLUZTOZUgIoGVppUFBAsKL8');
+INSERT INTO `users` VALUES (3, '程刚', 0, '长沙天心区唯一星城', 955123200, '市场部', '设计师', 2, 'cangku', '123456', 1, '张三', 'eyJhbGciOiJIUzI1NiJ9.Y2FuZ2t1.O6qlCpTSJlBfyFwI6SUrmE3FNTNf5YdubBsoDcSypn0');
 
 SET FOREIGN_KEY_CHECKS = 1;
