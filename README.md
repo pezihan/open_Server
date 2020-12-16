@@ -16,7 +16,7 @@ open_management 配套的服务器 API
 
  数据库文件在：db -> open_data.sql
 
- 创建数据库 mydb，可通过新建查询执行 open_data.sql下的 SQL 语句建立数据库，数据库表
+ 创建数据库 open_data，可通过在open_data数据库下新建查询执行 open_data.sql下的 SQL 语句建立数据库，数据库表
 
 **​ 数据库默认连接名：root   密码： 123456**
 
@@ -49,4 +49,4 @@ node app.js
   - users.js   用户管理数据处理文件
   - token.js   token登录保持处理文件
 - `app.js` 主项目入口文件
-- `package.json` 项目配置文件
+- `package.json` 项目配置文件atus
