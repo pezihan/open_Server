@@ -2,7 +2,7 @@
 
 ### 介绍
 
-open_shop 配套的服务器 API 
+open_management 配套的服务器 API 
 
 **前端项目地址**：https://github.com/pezihan/open_management
 
